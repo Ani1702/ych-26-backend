@@ -9,6 +9,7 @@ dotenv.config();
 const app = express();
 
 const userRoutes = require('./routes/user.routes');
+const teamRoutes = require('./routes/team.routes');
 
 // Middleware
 app.use(cors());
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/teams', teamRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
