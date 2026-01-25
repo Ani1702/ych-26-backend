@@ -3,7 +3,7 @@ const router = express.Router();
 const prisma = require('../config/prisma');
 const verifyToken = require('../middleware/verifyToken');
 
-router.post('/create-user', verifyToken, async (req, res) => {
+router.post('/create-profile', verifyToken, async (req, res) => {
     try {
         const { email } = req.user;
         const {

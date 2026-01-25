@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -23,12 +22,13 @@ model User {
 }
 
 model Team {
-  teamId      String   @id @unique
-  teamName    String
-  teamLeader  String
-  teamMembers String[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  teamId             String   @id @unique
+  teamName           String
+  teamLeader         String
+  teamMembers        String[]
+  problemStatementId String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
 model Submission {

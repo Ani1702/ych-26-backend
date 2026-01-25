@@ -61,6 +61,7 @@ router.post('/create-team', verifyToken, async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
+        console.log(error);
     }
 });
 
@@ -91,6 +92,11 @@ router.post('/join-team', verifyToken, async (req, res) => {
 
         if (!team) {
             return res.status(404).json({ error: 'Team not found' });
+        }
+
+        const MAX_TEAM_SIZE = parseInt(process.env.MAX_TEAM_SIZE) || 6;
+        if (team.teamMembers.length >= MAX_TEAM_SIZE) {
+            return res.status(400).json({ error: 'Team is full' });
         }
 
         const [updatedTeam, updatedUser] = await prisma.$transaction([
@@ -225,7 +231,70 @@ router.get('/get-team', verifyToken, async (req, res) => {
             return res.status(404).json({ error: 'Team not found' });
         }
 
-        res.json({ team });
+        const members = await prisma.user.findMany({
+            where: {
+                email: {
+                    in: team.teamMembers
+                }
+            },
+            select: {
+                email: true,
+                name: true,
+                regNo: true
+            }
+        });
+
+        // Replace teamMembers array of strings with array of objects
+        const teamWithMembers = {
+            ...team,
+            teamMembers: members
+        };
+
+        res.json({ team: teamWithMembers });
+
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+router.post('/submit-ps', verifyToken, async (req, res) => {
+    try {
+        const { email } = req.user;
+        const { problemStatementId } = req.body;
+
+        if (!problemStatementId) {
+            return res.status(400).json({ error: 'Problem Statement ID is required' });
+        }
+
+        const user = await prisma.user.findUnique({
+            where: { email }
+        });
+
+        if (!user || !user.hasTeam || !user.isTeamLeader) {
+            return res.status(403).json({ error: 'Only team leader can submit/update problem statement' });
+        }
+
+        const team = await prisma.team.findFirst({
+            where: {
+                teamMembers: {
+                    has: email
+                }
+            }
+        });
+
+        if (!team) {
+            return res.status(404).json({ error: 'Team not found' });
+        }
+
+        const updatedTeam = await prisma.team.update({
+            where: { teamId: team.teamId },
+            data: { problemStatementId }
+        });
+
+        res.json({
+            message: 'Problem statement submitted successfully',
+            team: updatedTeam
+        });
 
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
