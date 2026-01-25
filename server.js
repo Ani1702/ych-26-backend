@@ -8,10 +8,15 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
+const userRoutes = require('./routes/user.routes');
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.use('/api/users', userRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
