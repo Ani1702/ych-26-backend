@@ -26,7 +26,6 @@ const verifyToken = async (req, res, next) => {
         req.user = user;
         next();
     } catch (err) {
-        console.error('Auth Middleware Error:', err);
         res.status(500).json({ error: 'Internal server error during authentication' });
     }
 };

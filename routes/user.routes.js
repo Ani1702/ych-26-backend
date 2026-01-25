@@ -15,7 +15,6 @@ router.post('/create-user', verifyToken, async (req, res) => {
             mobileNo
         } = req.body;
 
-        // Basic validation
         if (!name || !regNo || !gender || !hostelBlock || !roomNo || !mobileNo) {
             return res.status(400).json({
                 error: 'Missing required fields',
@@ -23,7 +22,6 @@ router.post('/create-user', verifyToken, async (req, res) => {
             });
         }
 
-        // Check if user already exists
         const existingUser = await prisma.user.findUnique({
             where: { email }
         });
@@ -32,7 +30,6 @@ router.post('/create-user', verifyToken, async (req, res) => {
             return res.status(400).json({ error: 'User already exists' });
         }
 
-        // Create new user
         const newUser = await prisma.user.create({
             data: {
                 email,
@@ -53,13 +50,10 @@ router.post('/create-user', verifyToken, async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Create User Error:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-// GET /profile
-// Check if user profile is completed/exists
 router.get('/profile', verifyToken, async (req, res) => {
     try {
         const { email } = req.user;
@@ -74,7 +68,6 @@ router.get('/profile', verifyToken, async (req, res) => {
             return res.json({ profileCompleted: false });
         }
     } catch (error) {
-        console.error('Profile Check Error:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
