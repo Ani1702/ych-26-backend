@@ -10,15 +10,17 @@ router.post('/create-profile', verifyToken, async (req, res) => {
             name,
             regNo,
             gender,
+            school,
+            branch,
             hostelBlock,
             roomNo,
             mobileNo
         } = req.body;
 
-        if (!name || !regNo || !gender || !hostelBlock || !roomNo || !mobileNo) {
+        if (!name || !regNo || !gender || !school || !branch || !hostelBlock || !mobileNo) {
             return res.status(400).json({
                 error: 'Missing required fields',
-                required: ['name', 'regNo', 'gender', 'hostelBlock', 'roomNo', 'mobileNo']
+                required: ['name', 'regNo', 'gender', 'school', 'branch', 'hostelBlock', 'mobileNo']
             });
         }
 
@@ -36,6 +38,8 @@ router.post('/create-profile', verifyToken, async (req, res) => {
                 name,
                 regNo,
                 gender,
+                school,
+                branch,
                 hostelBlock,
                 roomNo,
                 mobileNo,

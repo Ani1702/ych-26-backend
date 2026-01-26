@@ -12,8 +12,10 @@ model User {
   name         String
   regNo        String   @unique
   gender       String
+  school       String
+  branch       String
   hostelBlock  String
-  roomNo       String
+  roomNo       String?
   mobileNo     String
   hasTeam      Boolean  @default(false)
   isTeamLeader Boolean  @default(false)
