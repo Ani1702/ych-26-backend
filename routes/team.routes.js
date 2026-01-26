@@ -25,6 +25,15 @@ router.post('/create-team', verifyToken, async (req, res) => {
             return res.status(400).json({ error: 'User is already in a team' });
         }
 
+        // Check if team name is unique
+        const existingTeamWithName = await prisma.team.findUnique({
+            where: { teamName }
+        });
+
+        if (existingTeamWithName) {
+            return res.status(400).json({ error: 'Team name already exists. Please choose a different name.' });
+        }
+
         let teamId = generateTeamCode();
         let isUnique = false;
         while (!isUnique) {

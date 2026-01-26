@@ -25,7 +25,7 @@ model User {
 
 model Team {
   teamId             String   @id @unique
-  teamName           String
+  teamName           String   @unique
   teamLeader         String
   teamMembers        String[]
   problemStatementId String?
