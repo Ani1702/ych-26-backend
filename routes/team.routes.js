@@ -275,6 +275,12 @@ router.post('/submit-ps', verifyToken, async (req, res) => {
             return res.status(400).json({ error: 'Problem Statement ID is required' });
         }
 
+        // Check if Round 0 is COMPLETED
+        const round0 = await prisma.round.findUnique({ where: { roundId: 0 } });
+        if (round0 && round0.status === 'COMPLETED') {
+            return res.status(400).json({ error: 'Cannot update problem statement after round0' });
+        }
+
         const user = await prisma.user.findUnique({
             where: { email }
         });

@@ -55,6 +55,13 @@ router.post('/submit', verifyToken, async (req, res) => {
             });
         }
 
+        await prisma.team.update({
+            where: { teamId: team.teamId },
+            data: {
+                [`round${round}Status`]: 'SUBMITTED'
+            }
+        });
+
         res.json({ message: 'Submission successful', submission });
 
     } catch (error) {

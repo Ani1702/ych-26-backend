@@ -31,10 +31,10 @@ model Team {
   problemStatementId String?
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
-  round0Status       QualificationStatus @default(LOCKED)
-  round1Status       QualificationStatus @default(LOCKED)
-  round2Status       QualificationStatus @default(LOCKED)
-  round3Status       QualificationStatus @default(LOCKED)
+  round0Status       QualificationStatus @default(NOT_SUBMITTED)
+  round1Status       QualificationStatus @default(NOT_SUBMITTED)
+  round2Status       QualificationStatus @default(NOT_SUBMITTED)
+  round3Status       QualificationStatus @default(NOT_SUBMITTED)
 }
 
 model Submission {
@@ -63,10 +63,8 @@ enum RoundStatus {
 }
 
 enum QualificationStatus {
-  LOCKED
   NOT_SUBMITTED
   SUBMITTED
-  UNDER_EVALUATION
   QUALIFIED
   NOT_QUALIFIED
 }
