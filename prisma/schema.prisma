@@ -29,18 +29,44 @@ model Team {
   teamLeader         String
   teamMembers        String[]
   problemStatementId String?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  round0Status       QualificationStatus @default(LOCKED)
+  round1Status       QualificationStatus @default(LOCKED)
+  round2Status       QualificationStatus @default(LOCKED)
+  round3Status       QualificationStatus @default(LOCKED)
 }
 
 model Submission {
   id               String   @id @default(uuid())
   teamId           String
   teamName         String
-  round0Submission String[]
-  round1Submission String[]
-  round2Submission String[]
-  round3Submission String[]
+  round0Submission Json?
+  round1Submission Json?
+  round2Submission Json?
+  round3Submission Json?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+model Round {
+  roundId   Int         @id
+  status    RoundStatus @default(LOCKED)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+enum RoundStatus {
+  LOCKED
+  LIVE
+  COMPLETED
+}
+
+enum QualificationStatus {
+  LOCKED
+  NOT_SUBMITTED
+  SUBMITTED
+  UNDER_EVALUATION
+  QUALIFIED
+  NOT_QUALIFIED
 }

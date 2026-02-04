@@ -6,9 +6,9 @@ const verifyToken = require('../middleware/verifyToken');
 router.post('/submit', verifyToken, async (req, res) => {
     try {
         const { email } = req.user;
-        const { round, links } = req.body;
+        const { round, submissionData } = req.body;
 
-        if (round === undefined || !links || !Array.isArray(links)) {
+        if (round === undefined || !submissionData) {
             return res.status(400).json({ error: 'Invalid submission data' });
         }
 
@@ -43,14 +43,14 @@ router.post('/submit', verifyToken, async (req, res) => {
                 data: {
                     teamId: team.teamId,
                     teamName: team.teamName,
-                    [`round${round}Submission`]: links
+                    [`round${round}Submission`]: submissionData
                 }
             });
         } else {
             submission = await prisma.submission.update({
                 where: { id: submission.id },
                 data: {
-                    [`round${round}Submission`]: links
+                    [`round${round}Submission`]: submissionData
                 }
             });
         }

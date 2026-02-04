@@ -9,6 +9,7 @@ const app = express();
 const userRoutes = require('./routes/user.routes');
 const teamRoutes = require('./routes/team.routes');
 const submissionRoutes = require('./routes/submission.routes');
+const roundRoutes = require('./routes/round.routes');
 
 app.use(cors());
 app.use(express.json());
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/users', userRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/submissions', submissionRoutes);
+app.use('/api/rounds', roundRoutes);
 
 app.get('/', (req, res) => {
     res.json({
