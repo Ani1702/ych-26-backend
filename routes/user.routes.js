@@ -55,6 +55,7 @@ router.post('/create-profile', verifyToken, async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
+        console.log(error);
     }
 });
 
@@ -73,6 +74,7 @@ router.get('/profile', verifyToken, async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
+        console.log(error);
     }
 });
 
