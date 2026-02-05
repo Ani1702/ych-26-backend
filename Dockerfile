@@ -1,32 +1,32 @@
-# Use official Node.js LTS image (Debian-based for better OpenSSL compatibility)
-FROM node:20-slim
+# Build stage
+FROM node:20 AS builder
 
-# Install OpenSSL and other dependencies
-RUN apt-get update -y && \
-    apt-get install -y openssl libssl3 ca-certificates && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set working directory
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
-
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy prisma schema
 COPY prisma ./prisma/
 
-# Generate Prisma Client
+RUN npm ci --only=production
 RUN npx prisma generate
 
-# Copy application files
+# Production stage
+FROM node:18
+
+WORKDIR /app
+
+# Install dumb-init
+RUN apt-get update && apt-get install -y dumb-init && apt-get clean
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/prisma ./prisma
 COPY . .
 
-# Expose the application port
-EXPOSE 8001
+# Create non-root user
+RUN useradd -m nodejs && chown -R nodejs:nodejs /app
+USER nodejs
 
-# Start the application
-CMD ["npm", "start"]
+EXPOSE 8080
+
+ENTRYPOINT ["dumb-init", "--"]
+
+CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]

@@ -15,12 +15,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api/users', userRoutes);
-app.use('/api/teams', teamRoutes);
-app.use('/api/submissions', submissionRoutes);
-app.use('/api/rounds', roundRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/teams', teamRoutes);
+app.use('/api/v1/submissions', submissionRoutes);
+app.use('/api/v1/rounds', roundRoutes);
 
-app.get('/', (req, res) => {
+app.get('/api/v1', (req, res) => {
     res.json({
         message: 'YCH 26 Backend API',
         status: 'running',

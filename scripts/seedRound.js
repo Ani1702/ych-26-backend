@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 async function main() {
     const rounds = [
-        { roundId: 0, status: 'LIVE' }, // Set Round 0 to LIVE for immediate testing
+        { roundId: 0, status: 'LIVE' },
         { roundId: 1, status: 'LOCKED' },
         { roundId: 2, status: 'LOCKED' },
         { roundId: 3, status: 'LOCKED' },
