@@ -27,6 +27,18 @@ router.post('/submit', verifyToken, async (req, res) => {
             return res.status(400).json({ error: `Team must have at least ${MIN_TEAM_SIZE} members to submit` });
         }
 
+        const teamMembersDetails = await prisma.user.findMany({
+            where: {
+                email: { in: team.teamMembers }
+            },
+            select: { gender: true }
+        });
+
+        const hasFemaleMember = teamMembersDetails.some(member => member.gender && member.gender.toLowerCase() === 'female');
+        if (!hasFemaleMember) {
+            return res.status(400).json({ error: 'Team must have at least one female member to submit' });
+        }
+
         if (!team.problemStatementId) {
             return res.status(400).json({ error: 'Team must select a problem statement before submitting' });
         }
